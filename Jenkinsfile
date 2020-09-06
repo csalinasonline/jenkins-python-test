@@ -11,39 +11,32 @@ pipeline {
         timestamps()
     }
     environment {
-      PATH="/var/lib/jenkins/miniconda3/bin:$PATH"
+      //PATH="/var/lib/jenkins/miniconda3/bin:$PATH"
     }
 
     stages {
-
         stage ("Code pull"){
             steps{
+                echo "Code pull"
                 checkout scm
             }
         }
         stage('Build environment') {
-            steps {
-                sh '''conda create --yes -n ${BUILD_TAG} python
-                      source activate ${BUILD_TAG} 
-                      pip install -r requirements.txt
-                    '''
+            steps{
+                echo "Build environment"
             }
         }
         stage('Test environment') {
-            steps {
-                sh '''source activate ${BUILD_TAG} 
-                      pip list
-                      which pip
-                      which python
-                    '''
-            }
+            steps{
+                echo "Test environment"
+            }            
         }
     }
     post {
         always {
-            sh 'conda remove --yes -n ${BUILD_TAG} --all'
+            echo "Posted"
         }
-        filure {
+        failure {
             echo "Send e-mail, when failed"
         }
     }
